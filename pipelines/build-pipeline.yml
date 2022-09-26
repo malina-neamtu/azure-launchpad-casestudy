@@ -1,0 +1,39 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'amuchaSub'
+    ScriptType: 'InlineScript'
+    Inline: New-AzResourceGroupDeployment -ResourceGroupName "LPprojectRG" -TemplateFile "pipelines/vnet.json"
+    errorActionPreference: 'continue'
+    azurePowerShellVersion: 'LatestVersion'
+  displayName: "Create networking"
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'amuchaSub'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    powerShellErrorActionPreference: 'continue'
+    inlineScript: az storage account create --name 'lunchpadprojectsaxyz' --resource-group 'LPprojectRG' -l 'westeurope' --sku 'Standard_LRS'
+  displayName: 'Create storage account'
+
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'amuchaSub'
+    ScriptType: 'InlineScript'
+    Inline: New-AzKeyVault -Name "projectsa" -ResourceGroupName "LPprojectRG" -Location "westeurope"
+    errorActionPreference: 'continue'
+    azurePowerShellVersion: 'LatestVersion'
+  displayName: 'Create keyvault'

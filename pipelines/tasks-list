@@ -1,0 +1,6 @@
+* Create one big working (but "broken") pipeline:
+	** (DONE) VNET (old template ARM - hardcoded IP addresses)
+	** (DONE) Storage Account (Azure CLI)
+	** (DONE) KeyVault (Powershell)
+	** db-VM (hardcoded ARM - without VM config)
+	** api-VM (another hardcoded ARM - without VM config)
